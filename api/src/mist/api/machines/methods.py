@@ -1696,7 +1696,7 @@ def _create_machine_azure_arm(owner, cloud_id, conn, public_key, machine_name,
             raise MachineCreationError('Could not create resource group: %s' %
                                        exc)
 
-    storage_accounts = conn.ex_list_storage_accounts()
+    storage_accounts = conn.ex_get_storage_account_keys(ex_resource_group, storage_account)
     ex_storage_account = None
     for lib_storage_account in storage_accounts:
         if lib_storage_account.id == storage_account:
@@ -1713,7 +1713,7 @@ def _create_machine_azure_arm(owner, cloud_id, conn, public_key, machine_name,
             timeout = time.time() + 30
             st_account_ready = False
             while time.time() < timeout and not st_account_ready:
-                st_accounts = conn.ex_list_storage_accounts()
+                st_accounts = conn.ex_get_storage_account_keys(ex_resource_group, storage_account)
                 for st_account in st_accounts:
                     state = st_account.extra.get('provisioningState')
                     if st_account.name == ex_storage_account and \
