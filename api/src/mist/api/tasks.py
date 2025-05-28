@@ -761,6 +761,8 @@ def create_machine_async(
             error = str(exc)
         except Exception as exc:
             error = repr(exc)
+            error_msg = f"Error in create_machine_async for job_id {job_id}: {str(exc)}"
+            log.error(error_msg, exc_info=True)
         finally:
             name = args[3]
             log_event(
