@@ -50,6 +50,7 @@ INTERNAL_SOCKJS_HOST = "sockjs"
 SSL_VERIFY = True
 THEME = ""
 EMAIL_LOGO = "landing/images/logo-email-440.png"
+MEMCACHED_HOST = ["memcached:11211"]
 
 GC_SCHEDULERS = True
 GC_SESSIONS = True

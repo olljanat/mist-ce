@@ -85,7 +85,7 @@ __all__ = [
 ]
 
 
-@dramatiq.actor(queue_name='dramatiq_scripts')
+@dramatiq.actor(queue_name='dramatiq_scripts', store_results=True)
 def ssh_command(owner_id, cloud_id, machine_id, host, command,
                 key_id=None, username=None, password=None, port=22):
 
@@ -101,7 +101,7 @@ def ssh_command(owner_id, cloud_id, machine_id, host, command,
                     (machine_id, host), output)
 
 
-@dramatiq.actor(queue_name='dramatiq_provisioning')
+@dramatiq.actor(queue_name='dramatiq_provisioning', store_results=True)
 def post_deploy_steps(auth_context_serialized, cloud_id, external_id,
                       monitoring, key_id=None, username=None, password=None,
                       port=22, script_id='', script_params='', job_id=None,
@@ -359,7 +359,7 @@ def post_deploy_steps(auth_context_serialized, cloud_id, external_id,
         )
 
 
-@dramatiq.actor(queue_name='dramatiq_provisioning')
+@dramatiq.actor(queue_name='dramatiq_provisioning', store_results=True)
 def openstack_post_create_steps(auth_context_serialized, cloud_id, external_id,
                                 monitoring, key_id, username, password,
                                 public_key, script='',
@@ -442,7 +442,7 @@ def openstack_post_create_steps(auth_context_serialized, cloud_id, external_id,
             raise
 
 
-@dramatiq.actor(queue_name='dramatiq_provisioning')
+@dramatiq.actor(queue_name='dramatiq_provisioning', store_results=True)
 def azure_post_create_steps(auth_context_serialized, cloud_id, external_id,
                             monitoring, key_id, username, password,
                             public_key, script='',
@@ -523,7 +523,7 @@ def azure_post_create_steps(auth_context_serialized, cloud_id, external_id,
             raise
 
 
-@dramatiq.actor(queue_name='dramatiq_provisioning')
+@dramatiq.actor(queue_name='dramatiq_provisioning', store_results=True)
 def rackspace_first_gen_post_create_steps(
         auth_context_serialized, cloud_id, external_id, monitoring, key_id,
         password, public_key, username='root', script='', script_id='',
@@ -586,7 +586,7 @@ def rackspace_first_gen_post_create_steps(
         raise
 
 
-@dramatiq.actor(queue_name='dramatiq_provisioning')
+@dramatiq.actor(queue_name='dramatiq_provisioning', store_results=True)
 def clone_machine_async(auth_context_serialized, machine_id, name,
                         job=None, job_id=None):
     from mist.api.exceptions import MachineCreationError
@@ -665,7 +665,7 @@ def clone_machine_async(auth_context_serialized, machine_id, name,
     print('clone_machine_async: results: {}'.format(node))
 
 
-@dramatiq.actor(queue_name='dramatiq_provisioning')
+@dramatiq.actor(queue_name='dramatiq_provisioning', store_results=True)
 def create_machine_async(
     auth_context_serialized, cloud_id, key_id, machine_name, location_id,
     image_id, size, image_extra, disk,
@@ -787,7 +787,7 @@ def send_email(subject, body, recipients, sender=None, bcc=None,
     return True
 
 
-@dramatiq.actor(queue_name='dramatiq_schedules')
+@dramatiq.actor(queue_name='dramatiq_schedules', store_results=True)
 def group_resources_actions(owner_id, action, name, resources_ids):
     """
     Pass resource information to run_resource_action, like a group
@@ -873,6 +873,7 @@ def group_resources_actions(owner_id, action, name, resources_ids):
 
 
 @dramatiq.actor(queue_name='dramatiq_schedules',
+                store_results=True,
                 time_limit=3_600_000)
 def run_resource_action(owner_id, action, name, resource_id):
     """
@@ -1061,6 +1062,7 @@ def run_resource_action(owner_id, action, name, resource_id):
 
 
 @dramatiq.actor(queue_name='dramatiq_schedules',
+                store_results=True,
                 time_limit=3_900_000,
                 throws=(me.DoesNotExist,))
 def group_run_script(auth_context_serialized, script_id, name, machine_ids,
@@ -1143,6 +1145,7 @@ def group_run_script(auth_context_serialized, script_id, name, machine_ids,
 
 
 @dramatiq.actor(queue_name='dramatiq_schedules',
+                store_results=True,
                 time_limit=3_600_000,
                 max_retries=0,
                 throws=(me.DoesNotExist,))
@@ -1253,6 +1256,7 @@ def run_script(auth_context_serialized, script_id, machine_id, params='',
 
 
 @dramatiq.actor(queue_name='dramatiq_polling',
+                store_results=True,
                 max_age=90_000)
 def update_poller(org_id):
     org = Organization.objects.get(id=org_id)
@@ -1335,7 +1339,7 @@ def delete_periodic_tasks(cloud_id):
             pass
 
 
-@dramatiq.actor(queue_name='dramatiq_sessions')
+@dramatiq.actor(queue_name='dramatiq_sessions', store_results=True)
 def async_session_update(owner, sections=None):
     if sections is None:
         sections = [

@@ -8,6 +8,7 @@ import dramatiq
 
 from dramatiq.middleware import Middleware
 from dramatiq.brokers.rabbitmq import RabbitmqBroker
+from dramatiq.results.backends import MemcachedBackend
 from dramatiq.results import Results
 
 from mist.api import config
@@ -66,4 +67,6 @@ if (config.SENTRY_CONFIG.get('DRAMATIQ_URL') and
 broker = RabbitmqBroker(url=config.BROKER_URL + '?heartbeat=600')
 broker.add_middleware(LoggingMiddleware())
 broker.add_middleware(MongoConnectMiddleware())
+result_backend = MemcachedBackend(servers=config.MEMCACHED_HOST)
+broker.add_middleware(Results(backend=result_backend))
 dramatiq.set_broker(broker)

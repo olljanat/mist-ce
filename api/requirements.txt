@@ -42,6 +42,7 @@ pika
 pingparsing
 pretty
 pycryptodome
+pylibmc
 pymongo
 pyyaml
 pyramid
@@ -49,7 +50,6 @@ pyramid_chameleon
 pytest
 python3-openid
 pyvmomi
-redis
 requests
 rstream
 s3cmd
