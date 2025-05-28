@@ -67,11 +67,6 @@ class AzureArmNetworkController(BaseNetworkController):
                     else:
                         network.extra['nics'].append(nic_id)
 
-    def _list_subnets__fetch_subnets(self, network):
-        l_network = AzureNetwork(network.external_id,
-                                 network.name, '', network.extra)
-        return self.cloud.ctl.compute.connection.ex_list_subnets(l_network)
-
     def _get_libcloud_subnet(self, subnet):
         networks = self.cloud.ctl.compute.connection.ex_list_networks()
         network = None
@@ -235,13 +230,6 @@ class LibvirtNetworkController(BaseNetworkController):
                 vnf['location'] = location.id
             vnfs += host_vnfs
         return vnfs
-
-
-class VSphereNetworkController(BaseNetworkController):
-
-    def _list_subnets__fetch_subnets(self, network):
-        return []
-
 
 class LXDNetworkController(BaseNetworkController):
     """

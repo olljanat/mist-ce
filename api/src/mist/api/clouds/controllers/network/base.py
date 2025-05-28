@@ -246,18 +246,6 @@ class BaseNetworkController(BaseController):
         task = PeriodicTaskInfo.get_or_add(task_key)
         first_run = False if task.last_success else True
 
-        async def _list_subnets_async(networks):
-            try:
-                loop = asyncio.get_event_loop()
-            except RuntimeError:
-                asyncio.set_event_loop(asyncio.new_event_loop())
-                loop = asyncio.get_event_loop()
-            subnets = [
-                loop.run_in_executor(None, network.ctl.list_subnets)
-                for network in networks
-            ]
-            return await asyncio.gather(*subnets)
-
         with task.task_runner(persist=persist):
             # Get cached networks as dict
             cached_networks = {'%s-%s' % (n.id, n.external_id): n.as_dict()
@@ -270,7 +258,6 @@ class BaseNetworkController(BaseController):
             except RuntimeError:
                 asyncio.set_event_loop(asyncio.new_event_loop())
                 loop = asyncio.get_event_loop()
-            loop.run_until_complete(_list_subnets_async(networks))
 
         # Publish patches to rabbitmq.
         new_networks = {'%s-%s' % (n.id, n.external_id): n.as_dict()
