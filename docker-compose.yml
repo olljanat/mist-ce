@@ -35,6 +35,8 @@ services:
   logstash:
     image: $IMG_REGISTRY/logstash:$IMG_TAG
     restart: on-failure:5
+    environment:
+      ELASTIC_URI: "http://elasticsearch:9200"
     depends_on:
       - elasticsearch
       - rabbitmq
