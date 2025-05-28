@@ -29,6 +29,7 @@ services:
       ES_JAVA_OPTS: "-Xms256M -Xmx256M"
       discovery.type: single-node
       logger.level: WARN
+      xpack.security.enabled: false
       # network.host: "172.18.0.2"
       # transport.host: "localhost"
 
