@@ -1699,7 +1699,7 @@ def _create_machine_azure_arm(owner, cloud_id, conn, public_key, machine_name,
     storage_accounts = conn.ex_get_storage_account_keys(ex_resource_group, storage_account)
     ex_storage_account = None
     for lib_storage_account in storage_accounts:
-        if lib_storage_account.id == storage_account:
+        if lib_storage_account.name == storage_account:
             ex_storage_account = lib_resource_group.name
             break
 
