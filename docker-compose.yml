@@ -37,6 +37,8 @@ services:
     restart: on-failure:5
     environment:
       ELASTIC_URI: "http://elasticsearch:9200"
+      ELASTIC_USERNAME: ""
+      ELASTIC_PASSWORD: ""
     depends_on:
       - elasticsearch
       - rabbitmq
